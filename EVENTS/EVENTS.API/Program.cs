@@ -1,0 +1,33 @@
+using EVENTS.API.Data;
+using Microsoft.EntityFrameworkCore;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+
+//builder.Services.AddSingleton<EventosDbContext>();
+//builder.Services.AddDbContext<EventosDbContext>(options => options.UseInMemoryDatabase("DevEventosDb"));
+var connectionString = builder.Configuration.GetConnectionString("DevEventosDb");
+builder.Services.AddDbContext<EventosDbContext>(options => options.UseSqlServer(connectionString));
+
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();
